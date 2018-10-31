@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 上面是xml的设定不用管，下面的是Spring配置文件的加载文件和设定这里只要不是将Spring的jar包换代就不需要更改 -->
+<beans  xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<context:component-scan base-package="*"/>
+	<!-- 数据源  spring自带的 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<!-- 这里的driverClassName指的是数据库驱动这里要根据使用的数据库进行更改这里使用的SQLServer数据库 -->
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<!-- 这里url主要说明的数据库的位置和调用那个数据库其中jdbc后面是位置而DatebaseName所说的是数据库的名称 -->
+		<property name="url" value="jdbc:sqlserver://192.168.1.198:1433;DatabaseName=Popedom;?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<!-- 下面的2行username和password主要是说明的登录的用户名和密码这里根据项目的不同进行修改 -->
+		<property name="username" value="sa"></property>
+		<property name="password" value="Pa$$w0rd"></property>
+	</bean>
+	 <!-- 扫描mybatis的配置结合上面的DataSource,会生成一个sqlFactory。这里一般来说不用改-->	 
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation"  value="classpath:myBatisConfig.xml" ><!-- 将mybatis的配置文件引入 -->
+		</property>
+	</bean>
+	
+	
+	<!-- 扫描接口包，将接口实例化一个对象，这里也是一般只要按照这个框架写就不用改 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.dao"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	<!-- 视图解析器这里。一般来说不用改 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="suffix" value=".jsp"></property>
+	</bean>
+	<!-- 配置了事务的管理。一般来说不用改 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource"></property>  
+    </bean>  
+	<!-- 事务的增强处理。一般来说不用改 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">  
+        <tx:attributes>  
+            <tx:method name="get*" read-only="true"/>  
+            <tx:method name="add*" rollback-for="Exception"/>  
+        </tx:attributes>  
+    </tx:advice> 
+    <aop:config>  
+        <aop:pointcut id="daoPointcut" expression="execution(* com.service.*.add*(..))" />  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="daoPointcut"/>  
+    </aop:config> 
+	<bean id="multipartResolver"  
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <!-- set the max upload size100MB -->  
+        <property name="maxUploadSize">  
+            <value>104857600</value>  
+        </property>  
+        <property name="maxInMemorySize">  
+            <value>4096</value>  
+        </property>  
+    </bean> 
+</beans>

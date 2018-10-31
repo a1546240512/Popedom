@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.IRoleFunDao">
+	<select id="getOneRoleFun" parameterType="int" resultType="int">
+		select FFunID from t_Popedom_RoleFun where FRoleID=#{fRoleID}
+	</select>
+	<delete id="deleteRoleFun" parameterType="int">
+		delete from t_Popedom_RoleFun where FRoleID=#{fRoleID}
+	</delete>
+	<insert id="insertRoleFun" parameterType="com.entity.RoleFun">
+		insert into t_Popedom_RoleFun (FRoleID,FFunID) values (#{fRoleID},#{fFunID})
+	</insert>
+	<select id="selectFunID" parameterType="int" resultType="int">
+		select FFunID from t_Popedom_RoleFun where FFunID={fFunID}
+	</select>
+</mapper>

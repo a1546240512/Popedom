@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.IFunctionDao">
+	<select id="getAllFunction" resultType="com.entity.Function">
+		select * from t_Popedom_Function
+	</select>
+	<select id="getAllFFunName" resultType="String">
+		select FFunName from t_Popedom_Function
+	</select>
+	<select id="getOneFFunctionByID" parameterType="int" resultType="com.entity.Function">
+		select * from t_Popedom_Function where FFunID=#{fFunID}
+	</select>
+	<select id="getSomeFunction" parameterType="com.entity.Function" resultType="com.entity.Function">
+		select * from t_Popedom_Function where FFunID like concat('%',#{fFunID},'%') and FFunName like concat('%',#{fFunName},'%') and FCreateUser like concat('%',#{fCreateUser},'%')
+	</select>
+	<select id="getFFunNameByID" parameterType="int" resultType="String">
+		select FFunName from t_Popedom_Function where FFunID=#{fFunID}
+	</select>
+	<select id="getFFunIDByName" parameterType="String" resultType="int">
+		select 	FFunID from t_Popedom_Function where FFunName=#{fFunName}
+	</select> 
+	<insert id="insertFunction" parameterType="com.entity.Function">
+		insert into  t_Popedom_Function (FFunID,FFunName,FFunClassName,FCreateUser,FLastEditTime) values (#{fFunID},#{fFunName},#{fFunClassName},#{FCreateUser},#{FLastEditTime})
+	</insert>
+	<delete id="deleteFunctionById" parameterType="int">
+		delete from t_Popedom_Function where FFunID=#{fFunID}
+	</delete>
+	<update id="updateFunctionById" parameterType="com.entity.Function">
+		update t_Popedom_Function set FFunID=#{fFunID},FFunName=#{fFunName},FFunClassName=#{FFunClassName},FLastEditTime=#{fFLastEditTime} where FFunID=#{fFunID}
+	</update>
+</mapper>

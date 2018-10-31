@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.IUserDao">
+	<select id="getAllUser" resultType="com.entity.User">
+		select t_Popedom_User.*,t_Popedom_Role.fRoleName from t_Popedom_User,t_Popedom_Role where t_Popedom_User.FRoleID=t_Popedom_Role.FRoleID
+	</select>
+	<select id="getSomeUser" parameterType="com.entity.User" resultType="com.entity.User">
+		select * from (select t_Popedom_User.*,t_Popedom_Role.fRoleName from t_Popedom_User,t_Popedom_Role where t_Popedom_User.FRoleID=t_Popedom_Role.FRoleID) as a where FUser like concat('%',#{fUser},'%') and FBanci like concat('%',#{fBanci},'%') and FRoleName like concat('%',#{fRoleName},'%') 
+	</select>
+	<select id="getOneUserByUser" parameterType="String" resultType="com.entity.User">
+		select t_Popedom_User.*,t_Popedom_Role.fRoleName from t_Popedom_User,t_Popedom_Role where t_Popedom_User.FRoleID=t_Popedom_Role.FRoleID and t_Popedom_User.FUser=#{fUser}
+	</select>
+	<insert id="insertUser" parameterType="com.entity.User">
+		insert into t_Popedom_User (FUser,FPassword,FBanci,FRoleID,FDescription,FCreateUser,FLastEditTime) values (#{fUser},#{fPassword},#{fBanci},#{fRoleID},#{fDescription},#{fCreateUser},#{fLastEditTime})
+	</insert>
+	<delete id="delteteUserByID" parameterType="String">
+		delete from t_Popedom_User where FUser=#{fUser}
+	</delete>
+	<update id="updateUser" parameterType="com.entity.User">
+		update t_Popedom_User set FPassword=#{fPassword},FBanci=#{fBanci},FRoleID=#{fRoleID},FDescription=#{fDescription},FLastEditTime=#{fLastEditTime} where FUser=#{fUser}
+	</update>
+	<select id="loginfo" parameterType="String" resultType="String" >
+		select FPassword from t_Popedom_User where FUser=#{fUser}
+	</select>
+	<select id="selectUserByFRoleID" parameterType="int" resultType="com.entity.User">
+		select * from t_Popedom_User where FRoleID=#{fRoleID}
+	</select>
+	
+</mapper>

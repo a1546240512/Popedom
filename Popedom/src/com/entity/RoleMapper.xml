@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.IRoleDao">
+	<select id="selectAllRole" resultType="com.entity.Role">
+		select * from t_Popedom_Role 
+	</select>
+	<select id="selectSomeRole" parameterType="String" resultType="com.entity.Role">
+		select * from t_Popedom_Role where FRoleName like concat ('%',#{fRoleName},'%')
+	</select>
+	<select id="selectOneRole" parameterType="int" resultType="com.entity.Role">
+		select * from t_Popedom_Role where FRoleID=#{fRoleID}
+	</select> 
+	<select id="selectIDByName" parameterType="String" resultType="int">
+		select FRoleID from t_Popedom_Role where FRoleName=#{fRoleName}
+	</select>
+	<insert id="insertRole" parameterType="com.entity.Role">
+		insert into t_Popedom_Role (FRoleID,FRoleName,FCreateUser,FDescription,FLastEditTime) values (#{fRoleID},#{fRoleName},#{fCreateUser},#{fDescription},#{fLastEditTime})
+	</insert>
+	<delete id="deleteRole" parameterType="int">
+		delete from t_Popedom_Role where FRoleID=#{fRoleId}
+	</delete>
+	<update id="updateRole" parameterType="com.entity.Role">
+		update t_Popedom_Role set FRoleName=#{fRoleName},FDescription=#{fDescription},FLastEditTime=#{fLastEditTime} where FRoleID=#{fRoleID}
+	</update>
+</mapper>
